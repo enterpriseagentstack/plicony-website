@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plicony — The Enterprise Agentic Stack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #050508;
+            --bg-secondary: #0a0a0f;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --glow-purple: rgba(168, 85, 247, 0.4);
+            --glow-pink: rgba(236, 72, 153, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%);
+            top: -200px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-pink) 0%, transparent 70%);
+            bottom: -150px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(-30px, 50px) scale(0.95); }
+            75% { transform: translate(-50px, -20px) scale(1.05); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background: rgba(5, 5, 8, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-cta {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--glow-purple);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow-purple);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(48px, 10vw, 96px);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            letter-spacing: -3px;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 50%, var(--accent-purple) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(18px, 2.5vw, 22px);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 48px;
+            line-height: 1.7;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 30px var(--glow-purple);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px var(--glow-purple);
+        }
+
+        .btn-secondary {
+            padding: 16px 32px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-purple);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* Problem/Solution Section */
+        .problem-solution {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-top: 64px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon.problem {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .card-icon.solution {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.05));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* Architecture Section */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 64px;
+        }
+
+        .arch-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .arch-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .arch-card.engine {
+            border-color: rgba(34, 197, 94, 0.3);
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.1);
+        }
+
+        .arch-card.products {
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.1);
+        }
+
+        .arch-card.client {
+            border-color: rgba(168, 85, 247, 0.3);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
+        }
+
+        .arch-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            opacity: 0.15;
+            position: absolute;
+            top: 16px;
+            right: 24px;
+        }
+
+        .arch-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .arch-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Industries Section */
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 64px;
+        }
+
+        .industry-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+        }
+
+        .industry-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-purple);
+            box-shadow: 0 20px 60px rgba(168, 85, 247, 0.15);
+        }
+
+        .industry-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .industry-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .industry-list {
+            list-style: none;
+        }
+
+        .industry-list li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .industry-list li:last-child {
+            border-bottom: none;
+        }
+
+        .industry-list li::before {
+            content: '→';
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        /* Sprint Section */
+        .sprint-section {
+            background: linear-gradient(180deg, transparent 0%, rgba(168, 85, 247, 0.05) 50%, transparent 100%);
+        }
+
+        .sprint-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .sprint-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 6vw, 72px);
+            font-weight: 700;
+            letter-spacing: -2px;
+        }
+
+        .sprint-title .highlight {
+            color: var(--accent-purple);
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 70px;
+            left: 60px;
+            right: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-purple));
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            box-shadow: 0 0 30px var(--glow-purple);
+        }
+
+        .step-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            max-width: 100px;
+        }
+
+        /* Value Props */
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 64px;
+        }
+
+        .value-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .value-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .value-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .value-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 160px 0;
+        }
+
+        .cta-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(40px, 8vw, 80px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -3px;
+        }
+
+        .cta-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            padding: 20px 48px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 40px var(--glow-purple);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 50px var(--glow-purple);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .footer-text span {
+            color: var(--accent-purple);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .problem-solution,
+            .architecture-grid,
+            .industries-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .value-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .timeline {
+                flex-wrap: wrap;
+                gap: 32px;
+                justify-content: center;
+            }
+
+            .timeline::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-gradient">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-content">
+            <div class="logo">Plicony</div>
+            <button class="nav-cta">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    Enterprise Agentic Stack
+                </div>
+                <h1 class="hero-title">
+                    Build Your Own<br>
+                    <span class="gradient-text">AI Agents.</span><br>
+                    Safely Integrated.
+                </h1>
+                <p class="hero-subtitle">
+                    A colony of AI agents that become the central nervous system of your enterprise—understanding your data, automating your processes, and empowering your people.
+                </p>
+                <div class="hero-cta-group">
+                    <button class="btn-primary">Start Your Sprint →</button>
+                    <button class="btn-secondary">Watch Demo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem / Solution -->
+    <section>
+        <div class="container">
+            <div class="section-label">The Challenge</div>
+            <h2 class="section-title">Drowning in Data.<br>Starving for Action.</h2>
+            <p class="section-subtitle">Your enterprise has the data. What it lacks is the ability to act on it—instantly, intelligently, and at scale.</p>
+            
+            <div class="problem-solution">
+                <div class="glass-card">
+                    <div class="card-icon problem">🚫</div>
+                    <h3 class="card-title">The Problem</h3>
+                    <p class="card-text">IT backlogs stretch for months. Simple requests take weeks. Strategic decisions are made on outdated information. Your best people spend their time on operational legwork instead of innovation.</p>
+                </div>
+                <div class="glass-card">
+                    <div class="card-icon solution">✓</div>
+                    <h3 class="card-title">The Solution</h3>
+                    <p class="card-text">Plicony deploys intelligent AI agents that integrate with your entire digital ecosystem. They work 24/7 to automate tasks, surface insights, and take proactive action—turning your data into a competitive advantage.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture -->
+    <section>
+        <div class="container">
+            <div class="section-label">Architecture</div>
+            <h2 class="section-title">Three Layers.<br>Infinite Possibilities.</h2>
+            <p class="section-subtitle">A modular architecture designed for enterprise scale, security, and seamless integration.</p>
+            
+            <div class="architecture-grid">
+                <div class="arch-card engine">
+                    <span class="arch-number">1</span>
+                    <h3 class="arch-title">The Engine</h3>
+                    <p class="arch-desc">Ontology Layer + Agentic Core + Data Connectors for ERP, CRM, Databases & Cloud Storage</p>
+                </div>
+                <div class="arch-card products">
+                    <span class="arch-number">2</span>
+                    <h3 class="arch-title">Plicony Products</h3>
+                    <p class="arch-desc">Pre-built solutions: BOM Management, Demand Forecasting, Clinical Trial Monitoring & more</p>
+                </div>
+                <div class="arch-card client">
+                    <span class="arch-number">3</span>
+                    <h3 class="arch-title">Client Layer</h3>
+                    <p class="arch-desc">Custom agents and workflows tailored to your unique operational reality</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries -->
+    <section>
+        <div class="container">
+            <div class="section-label">Industries</div>
+            <h2 class="section-title">Transforming<br>How Industries Work.</h2>
+            <p class="section-subtitle">From pharmaceuticals to manufacturing to FMCG—Plicony agents are solving real problems.</p>
+            
+            <div class="industries-grid">
+                <div class="industry-card">
+                    <div class="industry-icon">💊</div>
+                    <h3 class="industry-title">Pharmaceuticals</h3>
+                    <ul class="industry-list">
+                        <li>Clinical trial anomaly detection</li>
+                        <li>Cold chain integrity monitoring</li>
+                        <li>Physician insights for sales teams</li>
+                    </ul>
+                </div>
+                <div class="industry-card">
+                    <div class="industry-icon">🏭</div>
+                    <h3 class="industry-title">Manufacturing</h3>
+                    <ul class="industry-list">
+                        <li>Predictive maintenance alerts</li>
+                        <li>Supply chain resilience planning</li>
+                        <li>Workplace safety monitoring</li>
+                    </ul>
+                </div>
+                <div class="industry-card">
+                    <div class="industry-icon">🛒</div>
+                    <h3 class="industry-title">FMCG</h3>
+                    <ul class="industry-list">
+                        <li>Dynamic demand forecasting</li>
+                        <li>Promotion ROI analysis</li>
+                        <li>Real-time trend detection</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sprint Section -->
+    <section class="sprint-section">
+        <div class="container">
+            <div class="sprint-header">
+                <div class="section-label">Our Promise</div>
+                <h2 class="sprint-title">From Problem to<br>Prototype in <span class="highlight">7 Days</span></h2>
+                <p class="section-subtitle" style="margin: 24px auto 0; text-align: center;">We don't just demo—we deliver. Our one-week sprint solves a real problem in your organization.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="step-number">1</div>
+                    <span class="step-label">Scope & Kick-off</span>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">2</div>
+                    <span class="step-label">Data Integration</span>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">3-4</div>
+                    <span class="step-label">Agent Prototyping</span>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">5</div>
+                    <span class="step-label">Workflow Build</span>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">6</div>
+                    <span class="step-label">Testing</span>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">7</div>
+                    <span class="step-label">Handover</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Props -->
+    <section>
+        <div class="container">
+            <div class="section-label">Why Plicony</div>
+            <h2 class="section-title">Built for the<br>Modern Enterprise.</h2>
+            
+            <div class="value-grid">
+                <div class="value-card">
+                    <div class="value-icon">⚡</div>
+                    <h3 class="value-title">Cut Bureaucracy</h3>
+                    <p class="value-desc">Bypass IT backlogs. Build solutions in minutes, not months.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🔗</div>
+                    <h3 class="value-title">Unified Data</h3>
+                    <p class="value-desc">Connect all your systems into one intelligent layer.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🛡️</div>
+                    <h3 class="value-title">Enterprise Security</h3>
+                    <p class="value-desc">Granular access control. Your data stays yours.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">📈</div>
+                    <h3 class="value-title">Proactive Intelligence</h3>
+                    <p class="value-desc">Move from dashboards to automated action.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Build<br>Your AI Colony?</h2>
+            <p class="cta-subtitle">Start your one-week sprint today. Solve a real problem. See real results.</p>
+            <button class="cta-button">Start Your One-Week Sprint →</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="footer-text"><span>Plicony</span> — Build your own agents. Safely integrated.</p>
+        </div>
+    </footer>
+</body>
+</html>
